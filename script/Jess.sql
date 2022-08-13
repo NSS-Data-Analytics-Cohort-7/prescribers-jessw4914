@@ -115,11 +115,14 @@ SELECT d.drug_name,
 CASE WHEN (opioid_drug_flag='Y') then 'opiod'
 WHEN(antibiotic_drug_flag = 'y') then 'antibiotic'
 ELSE 'NEITHER'
-END AS drug_type,total_drug_cost
+END AS drug_type,
+cast(sum(total_drug_cost as money)
 from drug as d
 left join prescription as p
 on d.drug_name=p.drug_name
-
+--where money is NOT NULL
+group by d.drug_name,drug_type
+order by drug_type, money DESC
 
 
 
