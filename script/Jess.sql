@@ -48,12 +48,29 @@ SUM(p1.total_claim_count) as claims
 from prescription as p1
 left join prescriber as p2
 on p1.npi = p2.npi
-join drug as d
+left join drug as d
 on d.drug_name = p1.drug_name
-where p1.total_claim_count IS NOT NULL
-  opioid_drug_flag = 'Y',
-  or long_actin_opioid_drug_flag = 'Y'
+where 
+  d.opioid_drug_flag  = 'Y'
+  or d.long_acting_opioid_drug_flag = 'Y'
 group by  p2.specialty_description
 order by claims DESC;
 
 
+--C Challenge Question: Are there any specialties that appear in the prescriber table that 
+--have no associated prescriptions in the prescription table?
+
+select distinct p2.specialty_description,
+p1.total_claim_count as claims
+from prescriber as p2
+left join  prescription as p1
+on p2.npi = p1.npi
+
+where 
+  p1.total_claim_count IS NULL;
+
+
+--sanity check
+select opioid_drug_flag
+from drug
+where opioid_drug_flag = 'Y'
