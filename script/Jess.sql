@@ -81,12 +81,50 @@ order by cost DESC
 
 --B. b. Which drug (generic_name) has the hightest total cost per day? 
 --**Bonus: Round your cost per day column to 2 decimal places. Google ROUND to see how this works.
+
+LEVOTHYROXINE SODIUM
+
+select d.generic_name,
+p1.total_day_supply_ge65 as cost
+from public.prescription as p1
+INNER join public.drug as d
+on p1.drug_name = d.drug_name
+WHERE total_day_supply_ge65 IS NOT NULL
+group by d.generic_name, p1.total_day_supply_ge65
+order by cost DESC
+
+
+--4.a. For each drug in the drug table, return the drug name and then a column named 'drug_type' 
+which says 'opioid' for drugs which have opioid_drug_flag = 'Y', says 'antibiotic' for those drugs 
+which have antibiotic_drug_flag = 'Y', and says 'neither' for all other drugs.
+
+
+SELECT drug_name,
+CASE WHEN (opioid_drug_flag='Y') then 'opiod'
+WHEN(antibiotic_drug_flag = 'y') then 'antibiotic'
+ELSE 'neither'
+END AS drug_type
+from drug
+
+
+
+--B. Building off of the query you wrote for part a, determine whether more was spent (total_drug_cost) 
+--on opioids or on antibiotics. Hint: Format the total costs as MONEY for easier comparision.
+
+SELECT d.drug_name,
+CASE WHEN (opioid_drug_flag='Y') then 'opiod'
+WHEN(antibiotic_drug_flag = 'y') then 'antibiotic'
+ELSE 'NEITHER'
+END AS drug_type,total_drug_cost
+from drug as d
+left join prescription as p
+on d.drug_name=p.drug_name
+
+
+
+
+
 --sanity check
-
-
-
-
-
 select opioid_drug_flag
 from drug
 where opioid_drug_flag = 'Y'
