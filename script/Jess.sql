@@ -59,7 +59,7 @@ order by claims DESC;
 
 --C Challenge Question: Are there any specialties that appear in the prescriber table that 
 --have no associated prescriptions in the prescription table?
-
+-- there is np provider who has not prescribed medication
 select distinct p2.specialty_description,
 p1.total_claim_count as claims
 from prescriber as p2
@@ -69,8 +69,55 @@ on p2.npi = p1.npi
 where 
   p1.total_claim_count IS NULL;
 
+--3. a. Which drug (generic_name) had the highest total drug cost?
 
+select d.generic_name,
+sum(total_drug_cost) as cost
+from public.prescription as p1
+INNER join public.drug as d
+on p1.drug_name = d.drug_name
+group by d.generic_name
+order by cost DESC
+
+--B. b. Which drug (generic_name) has the hightest total cost per day? 
+--**Bonus: Round your cost per day column to 2 decimal places. Google ROUND to see how this works.
 --sanity check
+
+
+
+
+
 select opioid_drug_flag
 from drug
 where opioid_drug_flag = 'Y'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
